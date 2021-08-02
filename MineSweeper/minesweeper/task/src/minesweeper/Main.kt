@@ -3,16 +3,42 @@ package minesweeper
 import kotlin.random.Random
 
 val map = Array(9){CharArray(9){'.'} } // a map
-
-fun printMap(){
-    for (i in map) {
-        for (j in i) print(j)
-        println("")
+var mines:Int = 0
+var fake_mines:Int = 0
+fun main() {
+    print("How many mines do you want on the field? > ")
+    placeMines(readLine()!!.toInt().apply { mines = this })
+    calcHints()
+    printMap()
+    while (mines > 0 && fake_mines > 0){
+        print("Set/delete mines marks (x and y coordinates): > ")
+        val (x,y) = readLine()!!.split(' ').map { it.toInt() - 1}
+        if(map[y][x].isDigit())
+            print("There is a number here!")
+        else{
+            if(map[y][x] == 'X')
+                mines -= 1
+            else
+                fake_mines +=1
+            map[y][x] = '*'
+            printMap()
+        }
     }
 }
-fun main() {
-    print("How many mines do you want on the field?")
-    val n = readLine()!!.toInt()
+
+fun printMap(){
+    println(" ?123456789?")
+    println("—?—————————?")
+    for (i in map.indices) {
+        print("${i + 1}?")
+        for (j in map[i])
+            print(if(j != 'X') j else '.')
+        println("?")
+    }
+    println("—?—————————?")
+}
+
+fun placeMines(n:Int){
     for (i in 0 until n) {
         var xy: Pair<Int, Int>
         do {
@@ -20,6 +46,9 @@ fun main() {
         } while(map[xy.first][xy.second] == 'X')
         map[xy.first][xy.second] = 'X'
     }
+}
+
+fun calcHints(){
     for (i in map.indices){
         for (j in map[i].indices){
             if(map[i][j] == 'X') continue
@@ -40,5 +69,4 @@ fun main() {
             if(mines > 0) map[i][j] = '0' + mines
         }
     }
-    printMap()
 }
