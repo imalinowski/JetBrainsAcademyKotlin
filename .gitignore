@@ -161,5 +161,9 @@ fabric.properties
 
 # JetBrains Academy
 *.yaml
-minesweeper/minesweeper/
+minesweeper/minesweeper/Battle_
+minesweeper/minesweeper/Flexible mines
+minesweeper/minesweeper/Lay the groundwork
+minesweeper/minesweeper/Look around you
+minesweeper/minesweeper/Prepare for battle
 minesweeper/Topics/
