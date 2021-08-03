@@ -12,32 +12,40 @@ fun main() {
     printMap()
     while (marks != mines || mines.size == 0){
         print("Set/delete mines marks (x and y coordinates): ")
-        val (x,y,com) = readLine()!!.split(' ')
+        val (_x,_y,com) = readLine()!!.split(' ')
+        val x = _x.toInt() - 1
+        val y = _y.toInt() - 1
         when(com) {
             "free" -> {
-                if (mines.size == 0) placeMines(n, x.toInt() to y.toInt())
-                if (x.toInt() to y.toInt() in mines){
-
+                if (mines.size == 0) placeMines(n, x to y)
+                if (x to y in mines){
+                    printMap(true)
+                    println("You stepped on a mine and failed!")
+                    return
                 }
-                calcHints(x.toInt(),y.toInt())
+                calcHints(x, y)
             }
-            "mine" -> marks.add(x.toInt() to y.toInt())
-            else -> print("uknown command")
+            "mine" ->
+                if(x to y in marks)
+                    marks.remove(x to y)
+                else
+                    marks.add(x to y)
+            else -> print("unknown command")
         }
-        printMap()
+        printMap(marks == mines)
     }
     println("Congratulations! You found all the mines!")
 }
 
-fun printMap(fail:Boolean = false){
+fun printMap(gameEnd:Boolean = false){
     println(" │123456789│")
     println("—│—————————│")
     for (i in map.indices) {
         print("${i + 1}│")
         for (j in map[i].indices)
             print(when {
-                    j to i in mines && !fail -> '.'
-                    j to i in marks && !fail -> '*'
+                    j to i in marks && !gameEnd -> '*'
+                    j to i in mines && !gameEnd -> '.'
                     else -> map[i][j] })
         println("│")
     }
@@ -49,21 +57,22 @@ fun placeMines(n:Int,notXY : Pair<Int,Int>){
         var xy: Pair<Int, Int>
         do {
             xy = Random.nextInt(9) to Random.nextInt(9)
-        } while(map[xy.first][xy.second] == 'X' && xy == notXY)
-        map[xy.first][xy.second] = 'X'
+        } while(map[xy.second][xy.first] == 'x' && xy == notXY)
+        map[xy.second][xy.first] = 'x'
         mines.add(xy)
     }
 }
 
 fun calcHints(x:Int, y:Int) {
-    if (map[y][x] == 'X' || map[y][x] == '/') return
+    if (map[y][x] == 'x' || map[y][x] == '/') return
     var mines = 0
     for (i in -1..1) // mines count
         if(y + i in map.indices)
             for (j in -1..1)
                 if(x + j in map[y + i].indices)
-                    if(map[y + i][x + j] == 'X')
+                    if(map[y + i][x + j] == 'x')
                         mines += 1
+    marks.remove(x to y)
     if (mines > 0)
         map[y][x] = '0' + mines
     else {
