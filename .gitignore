@@ -167,6 +167,7 @@ minesweeper/minesweeper/Lay the groundwork
 minesweeper/minesweeper/Look around you
 minesweeper/minesweeper/Prepare for battle
 minesweeper/Topics/
+.idea/
 
 # Default ignored files
 /shelf/
@@ -176,4 +177,6 @@ minesweeper/Topics/
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/
+
+
 
