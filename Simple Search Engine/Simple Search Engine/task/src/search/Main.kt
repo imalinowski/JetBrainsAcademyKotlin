@@ -1,26 +1,41 @@
 package search
 
+val persons = mutableListOf<Person>()
 fun main() {
     println("Enter the number of people:")
     val n = readLine()!!.toInt()
     println("Enter all people:")
-    val list = mutableListOf<Person>()
-    for (i in 1..n)
-        list.add(Person(readLine()!!))
-    println()
-    println("Enter the number of search queries:")
-    val m = readLine()!!.toInt()
-    println()
-    for (i in 1..m) {
-        println("Enter data to search people:")
-        val searchRes = list.find(readLine()!!)
-        if(searchRes.isNotEmpty()) {
-            println("People found")
-            for (res in searchRes)
-                println(res)
+    for (i in 1..n) persons.add(Person(readLine()!!))
+
+    while(true) {
+        println(
+            "\n===Menu===\n" +
+            "1. Find a person\n" +
+            "2. Print all people\n" +
+            "0. Exit"
+        )
+        when(readLine()!!.toInt()){
+            0 -> break
+            1 -> findPerson()
+            2 -> {
+                println("=== List of people ===")
+                for (p in persons) println(p.info)
+            }
+            else -> print("Incorrect option! Try again.")
         }
-        else println("No matching people found.")
     }
+    print("Bye!")
+}
+
+fun findPerson(){
+    println("Enter a name or email to search all suitable people.")
+    val searchRes = persons.find(readLine()!!)
+    if(searchRes.isNotEmpty()) {
+        println("People found")
+        for (res in searchRes)
+            println(res)
+    }
+    else println("No matching people found.")
 }
 
 fun MutableList<Person>.find(data:String):List<Person>{
