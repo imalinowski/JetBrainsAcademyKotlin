@@ -24,7 +24,24 @@ fun main(args:Array<String>) {
         )
         when(readLine()!!.toInt()){
             0 -> break
-            1 -> findPersonII()
+            1 -> {
+                println("Select a matching strategy: ALL, ANY, NONE")
+                when(readLine()!!.uppercase()){
+                    "ALL" -> {
+                        println("Enter a name or email to search all suitable people.")
+                        val res = persons.findALL(readLine()!!)
+                        println("${res.size} persons found")
+                        res.forEach{ println(it)}
+                    }
+                    "ANY" -> {
+                        findPersonANY()
+                    }
+                    "NONE"-> {
+
+                    }
+                }
+                findPersonANY()
+            }
             2 -> {
                 println("=== List of people ===")
                 for (p in persons) println(p.info)
@@ -35,7 +52,7 @@ fun main(args:Array<String>) {
     print("Bye!")
 }
 
-fun findPersonII(){
+fun findPersonANY(){
     println("Enter a name or email to search all suitable people.")
     val searchRes = dataII[readLine()!!]
     if(searchRes != null) {
@@ -46,22 +63,14 @@ fun findPersonII(){
     else println("No matching people found.")
 }
 
-fun findPerson(){
-    println("Enter a name or email to search all suitable people.")
-    val searchRes = persons.find(readLine()!!)
-    if(searchRes.isNotEmpty()) {
-        println("People found")
-        for (res in searchRes)
-            println(res)
-    }
-    else println("No matching people found.")
-}
-
-fun MutableList<Person>.find(data:String):List<Person>{
+fun MutableList<Person>.findALL(data:String):List<Person>{
     val persons = mutableListOf<Person>()
-    for(person in this)
-        if(person.info.contains(data, true))
-            persons.add(person)
+    for(person in this) {
+        var check = true
+        for (key in data.split(" "))
+            check = (person.info.contains(key, true)) && check
+        if(check) persons.add(person)
+    }
     return  persons
 }
 
