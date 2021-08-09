@@ -1,11 +1,12 @@
 package search
 
+import java.io.File
+
 val persons = mutableListOf<Person>()
-fun main() {
-    println("Enter the number of people:")
-    val n = readLine()!!.toInt()
-    println("Enter all people:")
-    for (i in 1..n) persons.add(Person(readLine()!!))
+fun main(args:Array<String>) {
+    File(args[1]).forEachLine {
+        persons.add(Person(it))
+    }
 
     while(true) {
         println(
