@@ -3,9 +3,16 @@ package search
 import java.io.File
 
 val persons = mutableListOf<Person>()
+val dataII = mutableMapOf<String,MutableList<Int>>()
 fun main(args:Array<String>) {
-    File(args[1]).forEachLine {
-        persons.add(Person(it))
+
+    for ((i,line) in File(args[1]).readLines().withIndex()){
+        persons.add(Person(line))
+        for (word in line.split(" ")){
+            if(word !in dataII)
+                dataII[word] = mutableListOf(i)
+            else dataII[word]?.add(i)
+        }
     }
 
     while(true) {
@@ -17,7 +24,7 @@ fun main(args:Array<String>) {
         )
         when(readLine()!!.toInt()){
             0 -> break
-            1 -> findPerson()
+            1 -> findPersonII()
             2 -> {
                 println("=== List of people ===")
                 for (p in persons) println(p.info)
@@ -26,6 +33,17 @@ fun main(args:Array<String>) {
         }
     }
     print("Bye!")
+}
+
+fun findPersonII(){
+    println("Enter a name or email to search all suitable people.")
+    val searchRes = dataII[readLine()!!]
+    if(searchRes != null) {
+        println("People found")
+        for (res in searchRes)
+            println(persons[res])
+    }
+    else println("No matching people found.")
 }
 
 fun findPerson(){
