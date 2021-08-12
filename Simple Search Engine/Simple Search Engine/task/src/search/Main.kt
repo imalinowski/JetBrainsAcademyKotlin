@@ -8,7 +8,7 @@ fun main(args:Array<String>) {
 
     for ((i,line) in File(args[1]).readLines().withIndex()){
         persons.add(Person(line))
-        for (word in line.split(" ")){
+        for (word in line.split(" ").map { it.lowercase() }){
             if(word !in dataII)
                 dataII[word] = mutableListOf(i)
             else dataII[word]?.add(i)
@@ -26,21 +26,25 @@ fun main(args:Array<String>) {
             0 -> break
             1 -> {
                 println("Select a matching strategy: ALL, ANY, NONE")
-                when(readLine()!!.uppercase()){
-                    "ALL" -> {
-                        println("Enter a name or email to search all suitable people.")
-                        val res = persons.findALL(readLine()!!)
-                        println("${res.size} persons found")
-                        res.forEach{ println(it)}
-                    }
-                    "ANY" -> {
-                        findPersonANY()
-                    }
-                    "NONE"-> {
-
+                val strategy = readLine()!!.uppercase()
+                println("Enter a name or email to search all suitable people.")
+                val key = readLine()!!
+                val res : Set<Person> = when(strategy){
+                    "ALL" -> findPersonALL(key)
+                    "ANY" -> findPersonANY(key)
+                    "NONE"-> findPersonNONE(key)
+                    else -> {
+                        println("wrong cmd")
+                        emptySet()
                     }
                 }
-                findPersonANY()
+                if(res.isEmpty()) {
+                    println("No matching people found.")
+                    continue
+                }
+                println("${res.size} persons found")
+                for(person in res)
+                    println(person.info)
             }
             2 -> {
                 println("=== List of people ===")
@@ -52,15 +56,43 @@ fun main(args:Array<String>) {
     print("Bye!")
 }
 
-fun findPersonANY(){
-    println("Enter a name or email to search all suitable people.")
-    val searchRes = dataII[readLine()!!]
-    if(searchRes != null) {
-        println("People found")
-        for (res in searchRes)
-            println(persons[res])
+fun findPersonANY(key:String):Set<Person>{
+    val searchRes = mutableSetOf<Int>().apply {
+        key.split(" ").forEach{
+            val p = dataII[it]?.toList()
+            if( p != null)
+                addAll(p)
+        }
     }
-    else println("No matching people found.")
+    return mutableSetOf<Person>().apply {
+        searchRes.forEach{ add(persons[it])}
+    }
+}
+
+fun findPersonALL(key:String):Set<Person>{
+    var searchRes = mutableSetOf<Int>()
+    key.split(" ").forEach{
+        val p = dataII[it]?.toList()
+        if( p != null)
+            searchRes = searchRes.intersect(p).toMutableSet()
+    }
+    return mutableSetOf<Person>().apply {
+        searchRes.forEach{ add(persons[it])}
+    }
+}
+
+fun findPersonNONE(key:String):Set<Person>{
+    val searchRes = mutableSetOf<Int>().apply {
+        for (i in persons.indices) add(i)
+    }
+    key.split(" ").forEach{
+        dataII[it]?.toList()?.forEach { index ->
+            searchRes.remove(index)
+        }
+    }
+    return mutableSetOf<Person>().apply {
+        searchRes.forEach{ add(persons[it])}
+    }
 }
 
 fun MutableList<Person>.findALL(data:String):List<Person>{
