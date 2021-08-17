@@ -161,6 +161,8 @@ fabric.properties
 
 # JetBrains Academy
 *.yaml
+*.html
+
 minesweeper/minesweeper/Battle_
 minesweeper/minesweeper/Flexible mines
 minesweeper/minesweeper/Lay the groundwork
@@ -176,6 +178,15 @@ Simple Search Engine/Simple Search Engine/String theory/
 Simple Search Engine/Simple Search Engine/User menu/
 Simple Search Engine/Simple Search Engine/X-files/
 Search Engine/Simple Search Engine/task/test/
+
+Seam Carving/Seam Carving/Create an image
+Seam Carving/Seam Carving/Find the seam
+Seam Carving/Seam Carving/Horizontal seam
+Seam Carving/Seam Carving/Look at energy
+Seam Carving/Seam Carving/Negative photo
+Seam Carving/Seam Carving/Resize
+Seam Carving/Topics/
+Seam Carving/Seam Carving/task/test/SeamCarvingTest.java
 
 # Default ignored files
 /shelf/
